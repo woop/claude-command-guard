@@ -95,8 +95,7 @@ import sys
 import json
 import os
 import re
-from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Optional
 from anthropic import Anthropic
 
 def check_hard_blocks(command: str) -> Tuple[bool, str]:
@@ -105,7 +104,7 @@ def check_hard_blocks(command: str) -> Tuple[bool, str]:
             return True, reason
     return False, ""
 
-def get_command_type(command: str) -> str:
+def get_command_type(command: str) -> Optional[str]:
     for cmd_type, rules in LLM_VALIDATION_RULES.items():
         if re.search(rules["pattern"], command, re.IGNORECASE):
             return cmd_type
