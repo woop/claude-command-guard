@@ -1,4 +1,4 @@
-# Claude LLM Guard
+# claude-command-guard
 
 Intelligent command safety hook for Claude Code. Blocks dangerous commands using hard rules and LLM validation.
 
@@ -18,7 +18,10 @@ Examples:
 
 Requires: [Claude Code](https://claude.ai/code), `uv`, and Anthropic API key.
 
-### Option 1: Remote (recommended)
+```bash
+# Clone to hooks directory
+git clone https://github.com/woop/claude-command-guard.git ~/.claude/hooks/claude-command-guard
+```
 
 Add to `~/.claude/settings.json`:
 
@@ -26,7 +29,7 @@ Add to `~/.claude/settings.json`:
 {
   "hooks": {
     "beforeBash": {
-      "script": "uv run https://raw.githubusercontent.com/woop/claude-llm-guard/main/security_validator.py"
+      "script": "uv run ~/.claude/hooks/claude-command-guard/security_validator.py"
     }
   },
   "env": {
@@ -35,20 +38,13 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-### Option 2: Local installation
-
-```bash
-# Clone and install locally
-git clone https://github.com/woop/claude-llm-guard.git ~/.claude/claude-llm-guard
-```
-
-Add to `~/.claude/settings.json`:
+### Alternative: Remote execution
 
 ```json
 {
   "hooks": {
     "beforeBash": {
-      "script": "uv run ~/.claude/claude-llm-guard/security_validator.py"
+      "script": "uv run https://raw.githubusercontent.com/woop/claude-command-guard/main/security_validator.py"
     }
   },
   "env": {
@@ -64,5 +60,5 @@ Fork this repo and edit `HARD_BLOCK_RULES` and `LLM_VALIDATION_RULES`.
 ## Test
 
 ```bash
-uv run https://raw.githubusercontent.com/woop/claude-llm-guard/main/test_security_validator.py
+uv run ~/.claude/hooks/claude-command-guard/test_security_validator.py
 ```
