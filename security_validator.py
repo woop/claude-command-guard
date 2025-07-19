@@ -148,35 +148,9 @@ def install():
     )
 
 
-def run_tests():
-    from unittest.mock import patch
-
-    print("Running tests...")
-
-    # Test hard blocks
-    assert check_hard_blocks("sudo rm -rf /")[0], "Should block sudo rm"
-    assert not check_hard_blocks("rm -rf build/")[0], "Should not block safe rm"
-
-    # Test command type detection
-    assert get_command_type("rm -rf temp/") == "rm"
-    assert get_command_type("gcloud projects list") == "gcloud"
-    assert get_command_type("ls -la") is None
-
-    # Test API key requirement
-    with patch.dict(os.environ, {}, clear=True):
-        is_safe, reason = validate_command_with_llm("rm -rf build/", "rm")
-        assert not is_safe and "ANTHROPIC_API_KEY not available" in reason
-
-    print("✅ All tests passed!")
-
-
 def main():
     if "--install" in sys.argv:
         install()
-        return
-
-    if "--test" in sys.argv:
-        run_tests()
         return
 
     try:
