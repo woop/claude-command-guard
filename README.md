@@ -1,6 +1,6 @@
 Command safety hook for Claude Code that blocks dangerous bash commands.
 
-### how it works
+### How it works
 
 - **Hard blocks**: Always blocks obviously dangerous commands (`sudo rm`, `chmod 777`, `--no-verify`, etc.)
 - **LLM validation**: Uses Claude to evaluate context-dependent commands (`rm -rf`, `gcloud`)  
@@ -13,7 +13,7 @@ Examples:
 - ❌ `gcloud instances create` → Write operation
 - ❌ `git commit --no-verify` → Verification bypass
 
-### setup
+### Setup
 
 Requires: [Claude Code](https://claude.ai/code), `uv`, and Anthropic API key.
 
@@ -37,7 +37,7 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-#### alternative: remote execution
+#### Alternative: remote execution
 
 ```json
 {
@@ -52,6 +52,6 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-### customize
+### Customize
 
 Fork this repo and edit `HARD_BLOCK_RULES` and `LLM_VALIDATION_RULES`.
