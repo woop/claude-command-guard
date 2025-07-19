@@ -1,10 +1,24 @@
 # Claude LLM Guard
 
-Command safety hook for Claude Code.
+Intelligent command safety hook for Claude Code. Blocks dangerous commands using hard rules and LLM validation.
+
+## How it works
+
+- **Hard blocks**: Always blocks obviously dangerous commands (`sudo rm`, `chmod 777`, etc.)
+- **LLM validation**: Uses Claude to evaluate context-dependent commands (`rm -rf`, `gcloud`)  
+- **Pass-through**: All other commands allowed by default
+
+Examples:
+- ✅ `rm -rf build/` → Safe local directory
+- ❌ `rm -rf /usr` → System directory  
+- ✅ `gcloud projects list` → Read-only
+- ❌ `gcloud instances create` → Write operation
 
 ## Setup
 
-Add to your Claude settings file (`~/.claude/settings.json`):
+Requires: [Claude Code](https://claude.ai/code), `uv`, and Anthropic API key.
+
+Add to `~/.claude/settings.json`:
 
 ```json
 {
@@ -26,5 +40,5 @@ Fork this repo and edit `HARD_BLOCK_RULES` and `LLM_VALIDATION_RULES`.
 ## Test
 
 ```bash
-uv run test_security_validator.py
+uv run https://raw.githubusercontent.com/woop/claude-llm-guard/main/test_security_validator.py
 ```
