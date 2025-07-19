@@ -2,17 +2,7 @@
 
 Command safety hook for Claude Code.
 
-## Install
-
-```bash
-# Install the hook
-uv run https://raw.githubusercontent.com/woop/claude-llm-guard/main/security_validator.py --install
-
-# Set API key
-export ANTHROPIC_API_KEY="your-key"
-```
-
-## Configure Claude
+## Setup
 
 Add to your Claude settings file (`~/.claude/settings.json`):
 
@@ -20,7 +10,7 @@ Add to your Claude settings file (`~/.claude/settings.json`):
 {
   "hooks": {
     "beforeBash": {
-      "script": "~/.claude/hooks/security_validator.py"
+      "script": "uv run https://raw.githubusercontent.com/woop/claude-llm-guard/main/security_validator.py"
     }
   },
   "env": {
