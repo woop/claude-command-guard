@@ -39,20 +39,6 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-#### Alternative: remote execution
-
-```json
-{
-  "hooks": {
-    "beforeBash": {
-      "script": "uv run https://raw.githubusercontent.com/woop/claude-command-guard/main/security_validator.py"
-    }
-  },
-  "env": {
-    "ANTHROPIC_API_KEY": "your-key-here"
-  }
-}
-```
 
 ### Customize
 
@@ -74,7 +60,7 @@ LLM_VALIDATION_RULES = {
         # Regex to match commands that trigger LLM validation
         "pattern": r'rm\s+',
         
-        # Task for the LLM
+        # Instructions given to LLM
         "instructions": "Validate rm commands for path safety",
         
         # What LLM should consider safe
@@ -83,10 +69,10 @@ LLM_VALIDATION_RULES = {
         # What to block
         "unsafe_criteria": "System paths, parent directory traversal, root paths",
         
-        # Training examples
+        # Examples of safe commands
         "safe_examples": ["rm file.txt", "rm -rf build/", "rm -rf ./temp"],
         
-        # What should be blocked
+        # Examples of unsafe commands
         "unsafe_examples": ["rm -rf ../../../", "rm -rf /usr", "rm -rf /"]
     }
 }
