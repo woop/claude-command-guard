@@ -1,10 +1,10 @@
 # claude-command-guard
 
-Intelligent command safety hook for Claude Code. Blocks dangerous commands using hard rules and LLM validation.
+Command safety hook for Claude Code that blocks dangerous bash commands.
 
-## How it works
+### how it works
 
-- **Hard blocks**: Always blocks obviously dangerous commands (`sudo rm`, `chmod 777`, etc.)
+- **Hard blocks**: Always blocks obviously dangerous commands (`sudo rm`, `chmod 777`, `--no-verify`, etc.)
 - **LLM validation**: Uses Claude to evaluate context-dependent commands (`rm -rf`, `gcloud`)  
 - **Pass-through**: All other commands allowed by default
 
@@ -13,8 +13,9 @@ Examples:
 - ❌ `rm -rf /usr` → System directory  
 - ✅ `gcloud projects list` → Read-only
 - ❌ `gcloud instances create` → Write operation
+- ❌ `git commit --no-verify` → Verification bypass
 
-## Setup
+### setup
 
 Requires: [Claude Code](https://claude.ai/code), `uv`, and Anthropic API key.
 
@@ -38,7 +39,7 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-### Alternative: Remote execution
+#### alternative: remote execution
 
 ```json
 {
@@ -53,12 +54,6 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-## Customize
+### customize
 
 Fork this repo and edit `HARD_BLOCK_RULES` and `LLM_VALIDATION_RULES`.
-
-## Test
-
-```bash
-uv run ~/.claude/hooks/claude-command-guard/test_security_validator.py
-```

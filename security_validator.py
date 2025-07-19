@@ -7,6 +7,7 @@
 HARD_BLOCK_RULES = {
     r'sudo\s+rm': "Privileged destructive command",
     r'chmod\s+777': "Dangerous permission change", 
+    r'--no-verify': "Verification bypass detected",
     r'rm\s+.*-rf.*\s+/\s*$': "Root directory deletion",
     r'rm\s+.*-rf.*\s+~': "Home directory deletion",
     r'dd\s+if=': "Dangerous disk operation",
