@@ -57,3 +57,32 @@ Add to `~/.claude/settings.json`:
 ### Customize
 
 Fork this repo and edit `HARD_BLOCK_RULES` and `LLM_VALIDATION_RULES`.
+
+Example hard block rule:
+```python
+HARD_BLOCK_RULES = {
+    r'sudo\s+rm': "Privileged destructive command",
+    r'--no-verify': "Verification bypass detected",
+    r'test-block': "Test command for dry run validation",
+}
+```
+
+Example LLM validation rule:
+```python
+LLM_VALIDATION_RULES = {
+    "rm": {
+        "pattern": r'rm\s+.*-rf',
+        "instructions": "Validate rm -rf commands for path safety",
+        "safe_criteria": "Paths within worktrees, build directories, temp folders",
+        "unsafe_criteria": "System paths, parent directory traversal, root paths",
+        "safe_examples": ["rm -rf build/", "rm -rf ./temp"],
+        "unsafe_examples": ["rm -rf ../../../", "rm -rf /usr"]
+    }
+}
+```
+
+### Testing
+
+Use built-in dry-run commands:
+- `test-block` → Hard block validation
+- `test-llm` → LLM validation
