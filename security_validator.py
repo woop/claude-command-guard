@@ -3,10 +3,9 @@
 # dependencies = ["anthropic>=0.40.0"]
 # ///
 
-# HARD BLOCK RULES - Always dangerous, never allowed
 HARD_BLOCK_RULES = {
     r'sudo\s+rm': "Privileged destructive command",
-    r'chmod\s+777': "Dangerous permission change", 
+    r'chmod\s+777': "Dangerous permission change",
     r'--no-verify': "Verification bypass detected",
     r'rm\s+.*-rf.*\s+/\s*$': "Root directory deletion",
     r'rm\s+.*-rf.*\s+~': "Home directory deletion",
@@ -16,9 +15,9 @@ HARD_BLOCK_RULES = {
     r'/etc/': "System directory access",
     r'/usr/bin/': "System binary access",
     r'/System/': "System directory access",
+    r'test-block': "Test command for dry run validation",
 }
 
-# LLM VALIDATION RULES - LLM decides based on context
 LLM_VALIDATION_RULES = {
     "rm": {
         "pattern": r'rm\s+.*-rf',
@@ -55,15 +54,25 @@ LLM_VALIDATION_RULES = {
             "gcloud iam policy-bindings add",
             "gcloud container clusters create"
         ]
+    },
+    "test": {
+        "pattern": r'test-llm',
+        "instructions": "Test LLM validation - always block for dry run testing",
+        "safe_criteria": "Never - this is a test command that should always be blocked",
+        "unsafe_criteria": "Any command containing 'test-llm'",
+        "safe_examples": [],
+        "unsafe_examples": [
+            "test-llm"
+        ]
     }
 }
 
 def get_validation_prompt(command_type: str) -> str:
     rules = LLM_VALIDATION_RULES[command_type]
-    
+
     safe_examples = "\n".join(f"- {ex}" for ex in rules["safe_examples"])
     unsafe_examples = "\n".join(f"- {ex}" for ex in rules["unsafe_examples"])
-    
+
     return f"""You are validating a {command_type} command for safety.
 
 TASK: {rules["instructions"]}
@@ -106,20 +115,20 @@ def validate_command_with_llm(command: str, command_type: str) -> Tuple[bool, st
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         return False, "ANTHROPIC_API_KEY not available - blocking command for safety"
-    
+
     client = Anthropic(api_key=api_key)
     prompt = get_validation_prompt(command_type)
-    
+
     try:
         response = client.messages.create(
             model="claude-sonnet-4-20250514",
             max_tokens=4,
             messages=[{
-                "role": "user", 
+                "role": "user",
                 "content": f"{prompt}\n\nCommand to validate: {command}"
             }]
         )
-        
+
         result = response.content[0].text.strip()
         is_safe = result.startswith("1")
         reason = f"Command blocked by LLM validation"
@@ -154,7 +163,7 @@ def main():
 
     except Exception as e:
         print(f"❌ Validation error: {e}", file=sys.stderr)
-        sys.exit(0)
+        sys.exit(2)
 
 if __name__ == "__main__":
     main()
