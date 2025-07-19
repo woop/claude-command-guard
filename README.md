@@ -5,7 +5,7 @@ Command safety hook for Claude Code that blocks dangerous bash commands.
 ### How it works
 
 - **Hard blocks**: Always blocks obviously dangerous commands (`sudo rm`, `chmod 777`, `--no-verify`, etc.)
-- **LLM validation**: Uses Claude to evaluate context-dependent commands (`rm -rf`, `gcloud`)  
+- **LLM validation**: Uses Anthropic API to evaluate context-dependent commands (`rm -rf`, `gcloud`)  
 - **Pass-through**: All other commands allowed by default
 
 Examples:
