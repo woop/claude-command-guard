@@ -18,6 +18,8 @@ Examples:
 
 Requires: [Claude Code](https://claude.ai/code), `uv`, and Anthropic API key.
 
+### Option 1: Remote (recommended)
+
 Add to `~/.claude/settings.json`:
 
 ```json
@@ -25,6 +27,28 @@ Add to `~/.claude/settings.json`:
   "hooks": {
     "beforeBash": {
       "script": "uv run https://raw.githubusercontent.com/woop/claude-llm-guard/main/security_validator.py"
+    }
+  },
+  "env": {
+    "ANTHROPIC_API_KEY": "your-key-here"
+  }
+}
+```
+
+### Option 2: Local installation
+
+```bash
+# Clone and install locally
+git clone https://github.com/woop/claude-llm-guard.git ~/.claude/claude-llm-guard
+```
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "beforeBash": {
+      "script": "uv run ~/.claude/claude-llm-guard/security_validator.py"
     }
   },
   "env": {
