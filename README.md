@@ -19,7 +19,8 @@ Requires: [Claude Code](https://claude.ai/code), `uv`, and Anthropic API key.
 
 ```bash
 # Clone to hooks directory
-git clone https://github.com/woop/claude-command-guard.git ~/.claude/hooks/claude-command-guard
+git clone https://github.com/woop/claude-command-guard.git \
+  ~/.claude/hooks/claude-command-guard
 ```
 
 Add to `~/.claude/settings.json`:
