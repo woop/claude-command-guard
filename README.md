@@ -1,3 +1,5 @@
+# Claude Command Guard
+
 Command safety hook for Claude Code that blocks dangerous bash commands.
 
 ### How it works
