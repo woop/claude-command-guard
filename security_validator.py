@@ -20,11 +20,12 @@ HARD_BLOCK_RULES = {
 
 LLM_VALIDATION_RULES = {
     "rm": {
-        "pattern": r'rm\s+.*-rf',
-        "instructions": "Validate rm -rf commands for path safety",
-        "safe_criteria": "Paths within worktrees, build directories, temp folders, or clearly safe local paths",
-        "unsafe_criteria": "System paths, parent directory traversal (../), root paths, or home directory shortcuts",
+        "pattern": r'rm\s+',
+        "instructions": "Validate rm commands for path safety",
+        "safe_criteria": "Single files, or directories within worktrees, build directories, temp folders, or clearly safe local paths",
+        "unsafe_criteria": "System paths, parent directory traversal (../), root paths, home directory shortcuts, or dangerous recursive operations",
         "safe_examples": [
+            "rm file.txt",
             "rm -rf build/",
             "rm -rf ./temp",
             "rm -rf /Users/user/worktrees/project/dist",
@@ -34,7 +35,8 @@ LLM_VALIDATION_RULES = {
             "rm -rf ../../../",
             "rm -rf /usr",
             "rm -rf /etc",
-            "rm -rf ~"
+            "rm -rf ~",
+            "rm -rf /"
         ]
     },
     "gcloud": {

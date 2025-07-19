@@ -71,18 +71,31 @@ Example LLM validation rule:
 ```python
 LLM_VALIDATION_RULES = {
     "rm": {
-        "pattern": r'rm\s+.*-rf',
-        "instructions": "Validate rm -rf commands for path safety",
-        "safe_criteria": "Paths within worktrees, build directories, temp folders",
+        # Regex to match commands that trigger LLM validation
+        "pattern": r'rm\s+',
+        
+        # Task for the LLM
+        "instructions": "Validate rm commands for path safety",
+        
+        # What LLM should consider safe
+        "safe_criteria": "Single files or safe local directories",
+        
+        # What to block
         "unsafe_criteria": "System paths, parent directory traversal, root paths",
-        "safe_examples": ["rm -rf build/", "rm -rf ./temp"],
-        "unsafe_examples": ["rm -rf ../../../", "rm -rf /usr"]
+        
+        # Training examples
+        "safe_examples": ["rm file.txt", "rm -rf build/", "rm -rf ./temp"],
+        
+        # What should be blocked
+        "unsafe_examples": ["rm -rf ../../../", "rm -rf /usr", "rm -rf /"]
     }
 }
 ```
 
 ### Testing
 
-Use built-in dry-run commands:
+Ask Claude to run these built-in dry-run commands:
 - `test-block` → Hard block validation
 - `test-llm` → LLM validation
+
+Example: "Run the bash command `test-block`" - should be blocked immediately.
