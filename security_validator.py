@@ -20,7 +20,7 @@ HARD_BLOCK_RULES = {
 
 LLM_VALIDATION_RULES = {
     "rm": {
-        "pattern": r'rm\s+',
+        "pattern": r'\brm\s+',
         "instructions": "Validate rm commands for path safety",
         "safe_criteria": "Single files, or directories within worktrees, build directories, temp folders, or clearly safe local paths",
         "unsafe_criteria": "System paths, parent directory traversal (../), root paths, home directory shortcuts, or dangerous recursive operations",
@@ -40,7 +40,7 @@ LLM_VALIDATION_RULES = {
         ]
     },
     "gcloud": {
-        "pattern": r'gcloud\s+',
+        "pattern": r'\bgcloud\s+',
         "instructions": "Validate gcloud commands for read-only operations",
         "safe_criteria": "Read-only operations (list, get, describe, show, info, auth list, config get-value)",
         "unsafe_criteria": "Write operations (create, delete, update, deploy, set, add, remove)",
@@ -55,6 +55,42 @@ LLM_VALIDATION_RULES = {
             "gcloud projects delete",
             "gcloud iam policy-bindings add",
             "gcloud container clusters create"
+        ]
+    },
+    "kubectl": {
+        "pattern": r'\bkubectl\s+',
+        "instructions": "Validate kubectl commands for read-only operations",
+        "safe_criteria": "Read-only operations (get, describe, logs, explain, top, version)",
+        "unsafe_criteria": "Write operations (create, delete, apply, patch, replace, edit, scale)",
+        "safe_examples": [
+            "kubectl get pods",
+            "kubectl describe deployment",
+            "kubectl logs pod-name",
+            "kubectl top nodes"
+        ],
+        "unsafe_examples": [
+            "kubectl delete pod",
+            "kubectl apply -f",
+            "kubectl create deployment",
+            "kubectl patch configmap"
+        ]
+    },
+    "aws": {
+        "pattern": r'\baws\s+',
+        "instructions": "Validate AWS CLI commands for read-only operations",
+        "safe_criteria": "Read-only operations (list, get, describe, show)",
+        "unsafe_criteria": "Write operations (create, delete, put, update, deploy)",
+        "safe_examples": [
+            "aws s3 ls",
+            "aws ec2 describe-instances",
+            "aws iam list-users",
+            "aws logs get-log-events"
+        ],
+        "unsafe_examples": [
+            "aws s3 rm",
+            "aws ec2 terminate-instances",
+            "aws iam create-user",
+            "aws lambda delete-function"
         ]
     },
     "test": {
