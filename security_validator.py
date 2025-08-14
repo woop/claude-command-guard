@@ -41,38 +41,46 @@ LLM_VALIDATION_RULES = {
     },
     "gcloud": {
         "pattern": r'\bgcloud\s+',
-        "instructions": "Validate gcloud commands for read-only operations",
-        "safe_criteria": "Read-only operations (list, get, describe, show, info, auth list, config get-value)",
-        "unsafe_criteria": "Write operations (create, delete, update, deploy, set, add, remove)",
+        "instructions": "Validate gcloud commands for read-only operations and safe authentication",
+        "safe_criteria": "Read-only operations (list, get, describe, show, info, auth list, config get-value) and safe authentication operations (container clusters get-credentials, auth login, auth activate-service-account)",
+        "unsafe_criteria": "Write operations that modify resources (create, delete, update, deploy instances/clusters/projects, set policies, add/remove bindings)",
         "safe_examples": [
             "gcloud projects list",
             "gcloud config get-value project",
             "gcloud compute instances list",
-            "gcloud auth list"
+            "gcloud auth list",
+            "gcloud container clusters get-credentials",
+            "gcloud auth login",
+            "gcloud auth activate-service-account"
         ],
         "unsafe_examples": [
             "gcloud compute instances create",
             "gcloud projects delete",
             "gcloud iam policy-bindings add",
-            "gcloud container clusters create"
+            "gcloud container clusters create",
+            "gcloud container clusters delete"
         ]
     },
     "kubectl": {
         "pattern": r'\bkubectl\s+',
-        "instructions": "Validate kubectl commands for read-only operations",
-        "safe_criteria": "Read-only operations (get, describe, logs, explain, top, version)",
-        "unsafe_criteria": "Write operations (create, delete, apply, patch, replace, edit, scale)",
+        "instructions": "Validate kubectl commands for read-only operations and safe debugging",
+        "safe_criteria": "Read-only operations (get, describe, logs, explain, top, version) and safe debugging operations (port-forward)",
+        "unsafe_criteria": "Write operations (create, delete, apply, patch, replace, edit, scale) and remote execution (exec, run with interactive flags)",
         "safe_examples": [
             "kubectl get pods",
             "kubectl describe deployment",
             "kubectl logs pod-name",
-            "kubectl top nodes"
+            "kubectl top nodes",
+            "kubectl port-forward svc/service 8080:80",
+            "kubectl port-forward pod/pod-name 5432:5432"
         ],
         "unsafe_examples": [
             "kubectl delete pod",
             "kubectl apply -f",
             "kubectl create deployment",
-            "kubectl patch configmap"
+            "kubectl patch configmap",
+            "kubectl exec pod-name -- command",
+            "kubectl run -it --rm debug"
         ]
     },
     "aws": {
@@ -91,6 +99,29 @@ LLM_VALIDATION_RULES = {
             "aws ec2 terminate-instances",
             "aws iam create-user",
             "aws lambda delete-function"
+        ]
+    },
+    "git": {
+        "pattern": r'\bgit\s+',
+        "instructions": "Validate git commands for safe operations",
+        "safe_criteria": "Common development operations (status, log, diff, add, commit, push, pull, clone, checkout, branch, merge, stash)",
+        "unsafe_criteria": "Dangerous operations that could lose data (reset --hard, clean -fd, rm --cached with system paths)",
+        "safe_examples": [
+            "git status",
+            "git log",
+            "git diff",
+            "git add .",
+            "git commit -m 'message'",
+            "git push origin main",
+            "git pull",
+            "git checkout branch-name",
+            "git branch -d branch-name",
+            "git stash"
+        ],
+        "unsafe_examples": [
+            "git reset --hard HEAD~10",
+            "git clean -fd",
+            "git rm --cached /etc/passwd"
         ]
     },
     "test": {
